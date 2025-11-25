@@ -15,10 +15,10 @@ async function createKomik(database, komikData) {
     return newKomik;
 }
 
-async function getAllKomiks(database) {
-    const komiks = await database.Komik.findAll();
+async function getAllKomik(database) {
+    const komik = await database.Komik.findAll();
 
-    return komiks.map(k => {
+    return komik.map(k => {
         if (k.imageData) {
             k.imageData = k.imageData.toString('base64');
         }
@@ -36,4 +36,31 @@ async function getKomikById(database, id) {
     }
     return komik;
 }
+
+async function updateKomik(database, id, komikData) {
+    const komik = await database.Komik.findByPk(id);
+    if (!komik) {
+        throw new Error(`Komik not found with ID ${id}`);
+    }
+
+    await komik.update(komikData);
+    return komik;
+}
+
+async function deleteKomik(database, id) {
+    const komik = await database.Komik.findByPk(id);
+    if (!komik) {
+        throw new Error(`Komik not found with ID ${id}`);
+    }
+    await komik.destroy();
+    return { message: `Komik with ID ${id} has been deleted` };
+}
+
+module.exports = {
+    createKomik,
+    getAllKomik,
+    getKomikById,
+    updateKomik,
+    deleteKomik,
+};
 
