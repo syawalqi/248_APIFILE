@@ -19,5 +19,21 @@ async function getAllKomiks(database) {
     const komiks = await database.Komik.findAll();
 
     return komiks.map(k => {
+        if (k.imageData) {
+            k.imageData = k.imageData.toString('base64');
+        }
+        return k;
+    });
+}
+
+async function getKomikById(database, id) {
+    const komik = await database.Komik.findByPk(id);
+    if (!komik) {
+        throw new Error('Komik not found');
+    }
+    if (komik.imageData) {
+        komik.imageData = komik.imageData.toString('base64');
+    }
+    return komik;
 }
 
